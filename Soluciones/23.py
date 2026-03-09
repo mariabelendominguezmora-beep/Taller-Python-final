@@ -1,0 +1,12 @@
+import pandas as pd
+import codecs
+import re
+
+df = pd.read_csv('data/personas.csv', dtype=str)
+df['nombre'] = df['nombre_cifrado'].apply(lambda x: codecs.decode(str(x).strip(), 'rot_13'))
+df['ciudad_limpia'] = df['ciudad'].apply(
+    lambda s: re.sub(r'[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]', '', str(s)).strip().title()
+)
+
+cantidad = ((df['nombre'] == 'Carlos') & (df['ciudad_limpia'] == 'Cali')).sum()
+print(f"Registros con nombre 'Carlos' y ciudad 'Cali': {cantidad}")
